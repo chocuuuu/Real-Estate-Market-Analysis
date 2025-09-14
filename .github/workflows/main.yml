@@ -25,11 +25,17 @@ jobs:
         run: pip install requests pandas
 
       - name: Run Python script
-        # The 'env' block securely passes your GitHub secrets as environment variables
-        # that the Python script can read.
+        # This 'env' block securely passes your GitHub secrets as environment variables
+        # that your Python script can read.
         env:
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
           ACTOR_RUN_ID: ${{ secrets.ACTOR_RUN_ID }}
           KEY_VALUE_STORE_ID: ${{ secrets.KEY_VALUE_STORE_ID }}
           DATASET_ID: ${{ secrets.DATASET_ID }}
         run: python main.py
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: zillow-data
+          path: zillow_properties.csv
