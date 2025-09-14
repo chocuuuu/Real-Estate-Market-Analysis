@@ -1,0 +1,35 @@
+name: Fetch Apify Data
+
+# This workflow will run every time you push to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+  # You can also trigger it manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  fetch-data:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install requests pandas
+
+      - name: Run Python script
+        # The 'env' block securely passes your GitHub secrets as environment variables
+        # that the Python script can read.
+        env:
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          ACTOR_RUN_ID: ${{ secrets.ACTOR_RUN_ID }}
+          KEY_VALUE_STORE_ID: ${{ secrets.KEY_VALUE_STORE_ID }}
+          DATASET_ID: ${{ secrets.DATASET_ID }}
+        run: python main.py
